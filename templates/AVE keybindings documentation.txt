@@ -1,0 +1,20 @@
+
+Video Actions
+Play = "p"
+Download = "s"
+Trim Selection = "t"
+Delete Selection = "d"
+
+Markers
+Place Marker 1 = "u"
+Place Marker 2 = "i"
+Play Selection = "o"
+
+Scrubbing
+Jump Back = "j"
+Hop Back = "k"
+Hop Forward = "l"
+Jump Forward = ";"
+
+Emergency escape AVE keybinds incase user has screenreader conflicts!
+Flee AVE = "shift+esc"

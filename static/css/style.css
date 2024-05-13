@@ -1,0 +1,286 @@
+/* Important: All color stylings should go in colors.css */
+@import url("a11y-options.css");
+
+/* Styling */
+#wrapper {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Two column box stylings */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: .5em;
+}
+
+.two-col-80-20 {
+    display: grid;
+    grid-template-columns: 8fr 2fr;
+}
+
+.video-title {
+    font-size: 1.4em;
+    max-width: inherit;
+    text-wrap: wrap;
+    margin-bottom: 2em;
+}
+
+.margin-top-02-em {
+    margin-top: 0.2em;
+}
+
+header .has-border {
+    padding: 0 1em 1em 1em;
+}
+
+header .has-border h2 {
+    font-size: .8em;
+    margin-top: .2em;
+    margin-bottom: .4em;
+}
+
+header .has-border ol {
+    margin: 0;
+}
+
+header .has-border ol, header .has-border ul {
+    padding-left: 1em;
+}
+
+/* Menu Stylings */
+.menu ul {
+    margin: 1em 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.menu ul li {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+.menu a {
+    text-decoration: none;
+    padding: .5em 1em;
+    border-width: 2px;
+    border-style: solid;
+}
+
+.menu a:focus {
+    outline-width: 2px;
+    outline-style: dashed;
+}
+
+/* Lists */
+ul.inline {
+    margin: .5em 0 0 0;
+    padding: 0;
+}
+
+ul.inline li {
+    list-style-type: none;
+    display: inline-block;
+}
+
+/* Button and Form Stylings */
+button, select, input[type=submit], input[type="file"] {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+.large-button {
+    padding: 5px 20px;
+    font-size: 1em;
+    margin-top: .5em;
+}
+
+.display-block {
+    display: block;
+}
+
+form .display-block:not(:last-child) {
+    margin-bottom: .4em;
+}
+
+/* Misc Stylings */
+.has-border {
+    border-width: 2px;
+    border-style: solid;
+}
+
+a:focus, a:hover {
+    outline-width: 2px;
+    outline-style: dashed;
+}
+
+.small-screen {
+    display: none;
+}
+
+footer {
+    margin-top: 1em;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+footer p {
+    margin-top: 0;
+}
+
+/* Video progress bar */
+video {
+    height: 80%;
+}
+
+video, .video-progress {
+    width: 80%;
+}
+
+.video-progress {
+    position: relative;
+    height: 8.4px;
+    margin-bottom: 10px;
+}
+
+progress {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 2px;
+    width: 100%;
+    height: 8.4px;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+}
+
+progress::-webkit-progress-bar {
+    background-color: #474545;
+    border-radius: 2px;
+}
+
+progress::-webkit-progress-value {
+    background: var(--youtube-red);
+    border-radius: 2px;
+}
+
+progress::-moz-progress-bar {
+    border: 1px solid var(--youtube-red);
+    background: var(--youtube-red);
+}
+
+.seek {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    cursor: pointer;
+    margin: 0;
+}
+
+.seek:hover + .seek-tooltip {
+    display: block;
+}
+
+.seek-tooltip {
+    display: none;
+    position: absolute;
+    top: -50px;
+    margin-left: -20px;
+    font-size: 12px;
+    padding: 3px;
+    content: attr(data-title);
+    font-weight: bold;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Table */
+table {
+    border-width: 2px;
+    border-style: solid;
+    border-collapse: collapse;
+}
+
+.history-block {
+    display: block;
+    max-height: 60vh;
+    overflow: scroll;
+    margin-bottom: 1em;
+}
+
+th, td {
+    border-width: 1px;
+    border-style: solid;
+    padding: .3em;
+}
+
+.flashes li {
+    padding-right: 1em;
+    background-color: rgba(25, 198, 255, 0.05);
+}
+
+.flashes li:nth-child(odd) {
+    background-color: rgba(0, 63, 135, 0.05);
+}
+
+.flashes {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+/* Media Queries */
+@media only screen and (max-width: 1024px) {
+    #wrapper {
+        width: 100%;
+    }
+
+    .two-col-80-20 {
+        grid-template-columns: 1fr;
+        grid-row-gap: 10em;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .two-col {
+        grid-template-columns: 1fr;
+    }
+
+    .has-border {
+        border-width: 0;
+    }
+
+    nav.has-border {
+        padding-bottom: 0;
+    }
+
+    .padding-10px {
+        padding: 0px;
+    }
+
+    .small-screen {
+        display: block;
+    }
+
+    ul.flashes {
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+}
+
+@media only screen and (max-width: 200px) {
+    nav.menu ul li a {
+        display: block;
+        text-align: center;
+    }
+
+    nav.menu ul li a:first-child {
+        margin-bottom: .5em;
+    }
+}

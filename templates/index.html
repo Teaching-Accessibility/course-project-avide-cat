@@ -1,0 +1,170 @@
+{% extends "layout.html" %}
+{% block title %}
+{% if not uploaded_video %}
+Upload
+{% else %}
+{{uploaded_video}}
+{% endif %}
+{% endblock %}
+{% block h1 %}{% if uploaded_video %}Current Video: {{uploaded_video}} {% endif %}{% endblock %}
+{% block link1href %}/about{% endblock %}
+{% block link1text %}About{% endblock %}
+
+{% block box2keyboardshortcuts %}
+{% if not uploaded_video %}
+disabled
+{% endif %}
+{% endblock %}
+<!-- TODO: Figure out how to make these considered alerts to screen reader users.
+Setting an alert role didn't seem to help; should the alerts go at the top of the page? Decide later. -->
+{% block box1role %}alert{% endblock %}
+{% block box1h2 %}Alerts{% endblock %}
+{% block box1content %}
+<div class="history-block">
+    {% if session['messages'] %}
+    <table class="flashes">
+        {% for message in session['messages'][::-1] %}
+        <tr>
+            <td>{{ message[0] }}</td>
+            <td>{{ message[1] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>There are no alerts to display.</p>
+    {% endif %}
+    <form method="POST" action="{{ url_for('download_history') }}">
+        <button id="download" class="large-button">Download History</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block intro %}
+<div>
+    <h1>Accessible Video Editor</h1>
+    <nav class="has-border" aria-label="Introduction">
+        <h2 id="intro" class="visually-hidden">Introduction</h2>
+        <p>Welcome to AVE. This accessible open-source webapp is perfect for making simple edits to your
+            videos.</p>
+        <p>It currently features trimming out and isolating clips from a single MP4 video file.</p>
+        <p>Here are some tips and instructions to get started:</p>
+        <li>Video files must be of type MP4</li>
+        <li>Navigate to Upload Video and press the 'choose file' button to select the MP4 video you wish to edit
+        </li>
+        <li>To start editing your video, press the 'Upload Video' button below</li>
+        <li>Once loaded, you may set markers, Mark1 and Mark2, to isolate parts of your video</li>
+        <li>After making your selection, you may choose to trim the video to the selected clip or delete the
+            clip
+            from the video
+        </li>
+        <li>Multiple edits may be made to a single video</li>
+        <li>When you are done, select the download button to download a copy of your finished video</li>
+        <li>The alerts box will provide feedback on your current actions and hints on what to do next</li>
+    </nav>
+
+    <span class="display-block">
+
+        </span>
+</div>
+{% endblock %}
+
+{% block main %}
+<div>
+    {% if uploaded_video %}
+    <video id="videoPlayer" preload="metadata" tabindex="-1" disablePictureInPicture>
+        <source src="{{ url_for('send_uploaded_file', filename=uploaded_video) }}" type="video/mp4">
+    </video>
+    <div class="videoControls hidden" id="videoControls">
+
+        <div class="video-progress">
+            <progress id="progress-bar" value="0" min="0" aria-hidden="true"></progress>
+            <input class="seek" id="seek" value="0" min="0" type="range" step="0.1" aria-label="Video Timeline">
+            <div class="seek-tooltip" id="seek-tooltip" aria-hidden="true">00:00</div>
+        </div>
+
+        <br>
+
+        <div class="time">
+            <!-- Aria-label for accessibility -->
+            <span aria-label="Video progress" tabindex="0">
+                <time id="time-elapsed">00:00.00</time> / 
+                <time id="duration">00:00.00</time>
+            </span>
+
+            <!-- Displays marks -->
+            <span class="mark" tabindex="0">Mark 1: <time id="mark1">00:00.00</time></span>
+            <span class="mark" tabindex="0">Mark 2: <time id="mark2">00:00.00</time></span>
+        </div>
+
+
+        <nav aria-label="Play Head">
+            <ul class="inline">
+                <li>
+                    <button id="playButton" onclick="togglePlay()">Play</button>
+                </li>
+                <li>
+                    <button id="largeLeftStep">-10<span aria-hidden="true">s</span><span
+                            class="screen-reader-text"> seconds</span></button>
+                </li>
+                <li>
+                    <button id="smallLeftStep">-1<span aria-hidden="true">s</span><span
+                            class="screen-reader-text"> second</span></button>
+                </li>
+                <li>
+                    <button id="smallRightStep">+1<span aria-hidden="true">s</span><span
+                            class="screen-reader-text"> second</span></button>
+                </li>
+                <li>
+                    <button id="largeRightStep">+10<span aria-hidden="true">s</span><span class="screen-reader-text"> seconds</span>
+                    </button>
+                </li>
+                <!-- <li><button id="logTime" onclick="logCurrentTime()">Log Time to Console</button></li> -->
+            </ul>
+        </nav>
+        <nav aria-label="Edit Commands">
+            <ul class="inline">
+                <li>
+                    <button id="addMark1">Add Mark 1</button>
+                </li>
+                <li>
+                    <button id="addMark2">Add Mark 2</button>
+                </li>
+                <li>
+                    <button id="playSelection" disabled>Play Selection</button>
+                </li>
+                <li>
+                    <form method="POST" onsubmit="return validateMarks('Trim');"
+                          action="{{ url_for('trim', filename=uploaded_video) }}">
+                        <input type="hidden" name="trimMark1" id="trimMark1" value="00:00.00">
+                        <input type="hidden" name="trimMark2" id="trimMark2" value="00:00.00">
+                        <button type="submit" id="trim" disabled>Trim To Selection</button>
+                    </form>
+                </li>
+                <li>
+                    <form method="POST" onsubmit="return validateMarks('Delete');"
+                          action="{{ url_for('delete', filename=uploaded_video) }}">
+                        <input type="hidden" name="deleteMark1" id="deleteMark1" value="00:00.00">
+                        <input type="hidden" name="deleteMark2" id="deleteMark2" value="00:00.00">
+                        <button type="submit" id="delete" disabled>Delete Selection</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+        <form method="POST" action="{{ url_for('download_file', filename=uploaded_video) }}">
+            <button id="download" class="large-button">Download {{uploaded_video}}</button>
+        </form>
+    </div>
+    <script src="{{ url_for('static', filename='scripts/videoPlayer.js')  }}"></script>
+    <script src="{{ url_for('static', filename='scripts/AVEVideoKeybinds.js')  }}"></script>
+    {% else %}
+    <script src="{{ url_for('static', filename='scripts/videoUploadForm.js')  }}"></script>
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+        <div>
+            <label for="video" id="video-label">Select a MP4 video: </label>
+            <input type="file" id="video" name="video" required accept=".mp4" onchange="updateUploadForm()">
+        </div>
+        <button type="submit" class="large-button" id="upload-button" disabled>Upload</button>
+    </form>
+    {% endif %}
+    {% endblock %}
+</div>

@@ -1,0 +1,19 @@
+# py caches
+__pycache__
+.mypy_cache
+.ipynb_checkpoints/
+
+# virtual environments
+venv/
+env/
+.vscode/settings.json
+
+# file uploads
+*.mp4
+*.mov
+*.mvk
+/.idea
+/node_modules
+package-lock.json
+messageHistory.txt
+
