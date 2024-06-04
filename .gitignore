@@ -1,7 +1,6 @@
 # py caches
 __pycache__
 .mypy_cache
-.ipynb_checkpoints/
 
 # virtual environments
 venv/

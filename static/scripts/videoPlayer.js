@@ -142,6 +142,13 @@ function updateMark(which) {
     if (which == 1) {
         mark1time = video.currentTime;
         mark1.innerText = timeAsText;
+        fetch(`/addmark1/${timeAsText}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        console.log("adding mark " + which + " at " + timeAsText)
     } else {
         mark2time = video.currentTime;
         mark2.innerText = timeAsText;
@@ -151,9 +158,21 @@ function updateMark(which) {
     trimButton.disabled = !(mark1time < mark2time);
     deleteButton.disabled = !(mark1time < mark2time);
 }
+
+function addMarker(mark) {
+    // fetch(`/addmark/${mark}`, {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     }
+    // })
+    // console.log("adding mark " + mark)
+    // console.log("time: " + mark1time.innerText)
+}
+
 // set on click functions to update marks
-addMark1.onclick = function() {updateMark(1)};
-addMark2.onclick = function() {updateMark(2)};
+addMark1.onclick = function() { updateMark(1); addMarker("1");};
+addMark2.onclick = function() { updateMark(2); addMarker("2");};
 
 // Validate marks before trimming or deleting
 function validateMarks(action = "") {
@@ -202,3 +221,16 @@ smallLeftStep.onclick = function() {movePlayhead(-1 * SMALL_STEP)};
 largeRightStep.onclick = function() {movePlayhead(LARGE_STEP)};
 largeLeftStep.onclick = function() {movePlayhead(-1 * LARGE_STEP)};
 
+function showLoadingDialog() {
+    document.getElementById('loading').showModal();
+}
+
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function () {
+        showLoadingDialog();
+    });
+});
+
+window.addEventListener('load', function() {
+    document.getElementById('loading').close();
+});

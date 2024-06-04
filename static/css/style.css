@@ -62,6 +62,10 @@ header .has-border ol, header .has-border ul {
     display: inline;
 }
 
+#intro-box {
+    padding: 0.5em 1em;
+}
+
 .menu a {
     text-decoration: none;
     padding: .5em 1em;
@@ -210,8 +214,18 @@ table {
 .history-block {
     display: block;
     max-height: 60vh;
-    overflow: scroll;
     margin-bottom: 1em;
+    overflow-y: scroll;
+}
+
+.alerts-download-button {
+    display: flex;
+    justify-content: center;
+}
+
+.alert-title {
+    font-size: 1.2em;
+    padding-left: 0.5em;
 }
 
 th, td {

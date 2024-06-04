@@ -18,22 +18,29 @@ disabled
 <!-- TODO: Figure out how to make these considered alerts to screen reader users.
 Setting an alert role didn't seem to help; should the alerts go at the top of the page? Decide later. -->
 {% block box1role %}alert{% endblock %}
-{% block box1h2 %}Alerts{% endblock %}
+{% block box1h2 %}
+<div class="alert-title">Alerts</div>{% endblock %}
 {% block box1content %}
-<div class="history-block">
-    {% if session['messages'] %}
-    <table class="flashes">
-        {% for message in session['messages'][::-1] %}
-        <tr>
-            <td>{{ message[0] }}</td>
-            <td>{{ message[1] }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% else %}
-    <p>There are no alerts to display.</p>
-    {% endif %}
-    <form method="POST" action="{{ url_for('download_history') }}">
+<div>
+    <div class="history-block">
+        {% if session['messages'] %}
+        <table class="flashes">
+            <tr>
+                <th scope="col">Timestamp</th>
+                <th scope="col">Message</th>
+            </tr>
+            {% for message in session['messages'][::-1] %}
+            <tr>
+                <th scope="row">{{ message[0] }}</th>
+                <td>{{ message[1] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>There are no alerts to display.</p>
+        {% endif %}
+    </div>
+    <form method="POST" action="{{ url_for('download_history') }}" class="alerts-download-button">
         <button id="download" class="large-button">Download History</button>
     </form>
 </div>
@@ -42,7 +49,7 @@ Setting an alert role didn't seem to help; should the alerts go at the top of th
 {% block intro %}
 <div>
     <h1>Accessible Video Editor</h1>
-    <nav class="has-border" aria-label="Introduction">
+    <nav class="has-border" aria-label="Introduction" id="intro-box">
         <h2 id="intro" class="visually-hidden">Introduction</h2>
         <p>Welcome to AVE. This accessible open-source webapp is perfect for making simple edits to your
             videos.</p>
@@ -71,6 +78,19 @@ Setting an alert role didn't seem to help; should the alerts go at the top of th
 {% block main %}
 <div>
     {% if uploaded_video %}
+
+    <!-- This dialog serves as a loading indicator. It displays an image (a loading GIF) to inform the user
+        that a process is ongoing and they need to wait. -->
+    <dialog id="loading">
+        <img
+            id="loading-gif"
+            src="{{ url_for('static', filename='images/loading.gif')  }}"
+            alt="Loading Your Video, Please Wait. "
+            open
+        />
+    </dialog>
+
+
     <video id="videoPlayer" preload="metadata" tabindex="-1" disablePictureInPicture>
         <source src="{{ url_for('send_uploaded_file', filename=uploaded_video) }}" type="video/mp4">
     </video>
@@ -129,6 +149,16 @@ Setting an alert role didn't seem to help; should the alerts go at the top of th
                 <li>
                     <button id="addMark2">Add Mark 2</button>
                 </li>
+                <!-- <li>
+                    <form method="POST" action="{{ url_for('add_mark', mark='1', filename=uploaded_video) }}">
+                        <button type="submit" id="addMark1">Add Mark 1</button>
+                    </form>
+                </li>
+                <li>
+                    <form method="POST" action="{{ url_for('add_mark', mark='2', filename=uploaded_video) }}">
+                        <button type="submit" id="addMark2">Add Mark 2</button>
+                    </form>
+                </li> -->
                 <li>
                     <button id="playSelection" disabled>Play Selection</button>
                 </li>

@@ -68,6 +68,29 @@ The editing tools consists of six buttons. "Add Mark 1" and "Add Mark 2" are for
         - An introduction has now been added that provides helpful instructions to navigate and use the app.
     - Put together UI documentation
 
+## R2 Contributions
+- Thai Nguyen
+    - Alerts
+        - Added additional backend features to notify which marker is places and what the time associated is.
+        - Moved the download history button to be fixed to the bottom of the alerts section
+    - Feedback
+        - Included a loading dialog for when the trim, delete, and download form is submitted. This gives visual feedback to the user that the backend is currently processing the request.
+- Alex Kefer
+    - Alerts
+        - Removed useless horizontal slider on alert box.
+        - Added row and column scopes to the Alertbox
+        - Styled the text and buttons in the Alertbox to not be touching the edges of the box
+    - Introduction
+        - Styled text in Introduction to not interfere with border box
+- Charles Mikkelborg
+    - Debug
+        - Debug mode within the start script was not working as intended. It was using an depracted feature from several years ago. This has been updated to use the current syntax.
+    - Alerts
+        - Fixed download to write new parsed table data, instead of original string data
+    - Requirements
+        - As moviepy is no longer up to date and the current build is breaking with most builds, I have researched and created a list of packages and set package versions to make biulds consistent for every user or developer. This way future devs and users have a consistent experience and work environment
+
+
 ## Installation Info
 ### Dependencies
 Requires Python 3 and Flask.
@@ -81,7 +104,7 @@ Note that for Conda, you will have to install pip to the Conda environment, and 
 ```
 python3 -m venv env
 source env/bin/activate
-pip install flask Flask-Reuploaded moviepy
+pip install -r requirements.txt
 ```
 
 ##### Conda
@@ -89,14 +112,14 @@ pip install flask Flask-Reuploaded moviepy
 conda create --name env
 conda activate env
 conda install pip
-~/anaconda/envs/env/bin/pip install flask Flask-Reuploaded moviepy
+~/anaconda/envs/env/bin/pip install -r requirements.txt
 ```
 
 #### Windows PowerShell
 ```
 py -3 -m venv venv
 venv\Scripts\activate
-pip install flask Flask-Reuploaded moviepy
+pip install -r requirements.txt
 ```
 
 ### Quick Start
@@ -144,12 +167,23 @@ This script exists to clear out the upload folder.
 #### Manually
 Run each code line from the script associated with your terminal.
 If your terminal scripting language is not supported you can do the following.
-Create two environment variables, `FLASK_ENV` and `FLASK_APP`.
-Set `FLASK_ENV` to `development` and `FLASK_APP` to `main`. 
+Create two environment variables, `FLASK_DEBUG` and `FLASK_APP`.
+Set `FLASK_DEBUG` to `1` and `FLASK_APP` to `main`. 
 Then start the website locally with `flask run`.
 
-## UI Documentation
+## Current Issues
+### Video Editing
+#### moviepy
+One of the biggest outstanding issues is that of the status of the moviepy package. moviepy has not seen any releases for over 2 years while many of its dependancies have updated regularly during that time. The result is that many of its features are broken. Misleadingly this has not led to outright errors but rather that the intended actions are just not executed. One example is that of the debug mode within the starting script - the original `FLASK_ENV` was replaced by `FLASK_DEBUG` but newer environments would not show any errors despite being deprecated over a year ago and that code now has no functionality. Having no warnings or errors has hurt development with the current team as there was no indication that code was not being executed as expected. Having this experience we recommend the following: either future developement find a alternative package to moviepy to edit mp4 videos or wait for future developement of moviepy, which as of 6/2024 has seen recent developement, though no official release.
 
+That being said, we think it is important that future developement would benefit from having the same dev environment. We have included a requirements.txt that includes package versions that we feel will produce the best working environment. Note that if moviepy where to be updated these requirements would be obsolete.
+
+The following functionality seem to be broken with most environments (it is currently unknown if trim and delete are broken or just the downloaded result):
+- trim to selection
+- delete selection
+- download video (downloaded video is reliably a single frame with the expected audio)
+
+## UI Documentation
 ### Landing
 ID: ave_landing
 ![A screenshot of the landing page of the Ave webapp.](static/images/aveLanding.jpeg)
